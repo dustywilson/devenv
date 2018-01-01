@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 DISTRO_NAME=ubuntu
 DISTRO_VERSION=17.10
@@ -10,6 +10,7 @@ docker build \
 	--build-arg DISTRO_NAME=${DISTRO_NAME} \
 	--build-arg DISTRO_VERSION=${DISTRO_VERSION} \
 	--build-arg PROTOC_VERSION=${PROTOC_VERSION} \
-	-t dustywilson/devenv:build-protoc-${PROTOC_VERSION}-${DISTRO_NAME}_${DISTRO_VERSION} \
+	-t dustywilson/devenv:build-protoc${PROTOC_VERSION}-${DISTRO_NAME}${DISTRO_VERSION} \
 	protoc
 
+docker push dustywilson/devenv:build-protoc${PROTOC_VERSION}-${DISTRO_NAME}${DISTRO_VERSION}
