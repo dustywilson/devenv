@@ -1,13 +1,14 @@
 ARG COMMIT_NAME=unknown
-ARG PREFIX_NAME=dustywilson/devenv
+ARG IMAGE_NAME=dustywilson/devenv
 ARG DISTRO_NAME=ubuntu
 ARG DISTRO_VERSION=latest
 ARG HELM_VERSION
 
 
-FROM ${PREFIX_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION} AS compiler
+FROM ${IMAGE_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION} AS compiler
 
-RUN curl https://storage.googleapis.com/kubernetes-helm/helm-v${HELM_VERSION}-linux-amd64.tar.gz | tar -zxOf- linux-amd64/helm > /tmp/helm
+RUN echo curl https://storage.googleapis.com/kubernetes-helm/helm-v${HELM_VERSION}-linux-amd64.tar.gz | tar -zxOf- linux-amd64/helm > /tmp/helm
+RUN exit 1
 RUN chmod 755 /tmp/helm
 
 

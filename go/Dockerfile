@@ -1,11 +1,11 @@
 ARG COMMIT_NAME=unknown
-ARG PREFIX_NAME=dustywilson/devenv
+ARG IMAGE_NAME=dustywilson/devenv
 ARG DISTRO_NAME=ubuntu
 ARG DISTRO_VERSION=latest
 ARG GO_VERSION
 
 
-FROM ${PREFIX_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION} AS compiler
+FROM ${IMAGE_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION} AS compiler
 
 RUN gsutil cp gs://golang/go${GO_VERSION}.linux-amd64.tar.gz /tmp/go.tgz | tar -C /usr/local -zx
 

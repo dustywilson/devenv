@@ -1,5 +1,5 @@
 ARG COMMIT_NAME=unknown
-ARG PREFIX_NAME=dustywilson/devenv
+ARG IMAGE_NAME=dustywilson/devenv
 ARG DISTRO_NAME=ubuntu
 ARG DISTRO_VERSION=latest
 ARG PROTOC_VERSION
@@ -12,15 +12,15 @@ ARG MONGO_REPOVER
 ARG MONGO_DISTRO_NAME
 
 
-FROM ${PREFIX_NAME}:build-fonts AS fonts
-FROM ${PREFIX_NAME}:build-gactions AS gactions
-FROM ${PREFIX_NAME}:build-protoc${PROTOC_VERSION} AS protoc
-FROM ${PREFIX_NAME}:build-helm${HELM_VERSION} AS helm
-FROM ${PREFIX_NAME}:build-go${GO_VERSION} AS go
-FROM ${PREFIX_NAME}:build-gaesdk${GAESDK_VERSION} AS gaesdk
+FROM ${IMAGE_NAME}:build-fonts AS fonts
+FROM ${IMAGE_NAME}:build-gactions AS gactions
+FROM ${IMAGE_NAME}:build-protoc${PROTOC_VERSION} AS protoc
+FROM ${IMAGE_NAME}:build-helm${HELM_VERSION} AS helm
+FROM ${IMAGE_NAME}:build-go${GO_VERSION} AS go
+FROM ${IMAGE_NAME}:build-gaesdk${GAESDK_VERSION} AS gaesdk
 
 
-FROM ${PREFIX_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION}
+FROM ${IMAGE_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION}
 
 ARG NODE_REPOVER
 ARG MONGO_REPOVER

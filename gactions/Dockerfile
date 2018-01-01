@@ -1,10 +1,10 @@
 ARG COMMIT_NAME=unknown
-ARG PREFIX_NAME=dustywilson/devenv
+ARG IMAGE_NAME=dustywilson/devenv
 ARG DISTRO_NAME=ubuntu
 ARG DISTRO_VERSION=latest
 
 
-FROM ${PREFIX_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION} AS compiler
+FROM ${IMAGE_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION} AS compiler
 
 RUN curl https://dl.google.com/gactions/updates/bin/linux/amd64/gactions/gactions > /tmp/gactions
 RUN chmod 755 /tmp/gactions

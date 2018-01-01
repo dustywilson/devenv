@@ -1,16 +1,17 @@
 ARG COMMIT_NAME=unknown
-ARG PREFIX_NAME=dustywilson/devenv
+ARG IMAGE_NAME=dustywilson/devenv
 ARG DISTRO_NAME=ubuntu
 ARG DISTRO_VERSION=latest
 
 
-FROM ${PREFIX_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION} AS compiler
+FROM ${IMAGE_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION} AS compiler
 
 WORKDIR /fonts
 
 # Google Fonts
 WORKDIR /fonts/google-cloud-fonts
-RUN curl -L https://github.com/google/fonts/archive/master.zip | unzip -q
+RUN curl -L https://github.com/google/fonts/archive/master.zip > /tmp/googlefonts.zip
+RUN unzip -q /tmp/googlefonts.zip
 
 # Go Font
 WORKDIR /fonts/gofont

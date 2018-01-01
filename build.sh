@@ -15,7 +15,7 @@ MONGO_DISTRO_NAME=xenial
 cd "$(dirname "$(readlink -f "$0")")"
 
 
-PREFIX_NAME="dustywilson/devenv"
+IMAGE_NAME="dustywilson/devenv"
 COMMIT_NAME="$(TZ=UTC git log --date=format-local:"%Y%m%d%H%m" --pretty=format:"%cd-%h" -n1)"
 NOT_COMMITTED=
 if git status --porcelain | egrep -i "^\s*[MD]" >/dev/null; then
@@ -27,92 +27,126 @@ VERSION="${COMMIT_NAME}-go${GO_VERSION}-node${NODE_REPOVER}-mongo${MONGO_REPOVER
 
 # Base Image (includes bare essentials, such as curl and git)
 
-docker build \
-	--build-arg PREFIX_NAME=${PREFIX_NAME} \
-	--build-arg COMMIT_NAME=${COMMIT_NAME} \
-	--build-arg DISTRO_NAME=${DISTRO_NAME} \
-	--build-arg DISTRO_VERSION=${DISTRO_VERSION} \
-	-t ${PREFIX_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION} \
-	base
+BASE_TAG="base-${DISTRO_NAME}${DISTRO_VERSION}"
+if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${BASE_TAG}\$"; then
+	echo "Skipping ${BASE_TAG}"
+else
+	docker build \
+		--build-arg COMMIT_NAME=${COMMIT_NAME} \
+		--build-arg DISTRO_NAME=${DISTRO_NAME} \
+		--build-arg DISTRO_VERSION=${DISTRO_VERSION} \
+		-t ${IMAGE_NAME}:${BASE_TAG} \
+		base
+fi
 
 
 # Programming Fonts Collection
 
-docker build \
-	--build-arg PREFIX_NAME=${PREFIX_NAME} \
-	--build-arg COMMIT_NAME=${COMMIT_NAME} \
-	--build-arg DISTRO_NAME=${DISTRO_NAME} \
-	--build-arg DISTRO_VERSION=${DISTRO_VERSION} \
-	-t ${PREFIX_NAME}:build-fonts \
-	fonts
+FONTS_TAG="build-fonts"
+if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${FONTS_TAG}\$"; then
+	echo "Skipping ${FONTS_TAG}"
+else
+	docker build \
+		--build-arg IMAGE_NAME=${IMAGE_NAME} \
+		--build-arg COMMIT_NAME=${COMMIT_NAME} \
+		--build-arg DISTRO_NAME=${DISTRO_NAME} \
+		--build-arg DISTRO_VERSION=${DISTRO_VERSION} \
+		-t ${IMAGE_NAME}:${FONTS_TAG} \
+		fonts
+fi
 
 
 # Actions on Google
 
-docker build \
-	--build-arg PREFIX_NAME=${PREFIX_NAME} \
-	--build-arg COMMIT_NAME=${COMMIT_NAME} \
-	--build-arg DISTRO_NAME=${DISTRO_NAME} \
-	--build-arg DISTRO_VERSION=${DISTRO_VERSION} \
-	-t ${PREFIX_NAME}:build-gactions \
-	gactions
+GACTIONS_TAG="build-gactions"
+if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${GACTIONS_TAG}\$"; then
+	echo "Skipping ${GACTIONS_TAG}"
+else
+	docker build \
+		--build-arg IMAGE_NAME=${IMAGE_NAME} \
+		--build-arg COMMIT_NAME=${COMMIT_NAME} \
+		--build-arg DISTRO_NAME=${DISTRO_NAME} \
+		--build-arg DISTRO_VERSION=${DISTRO_VERSION} \
+		-t ${IMAGE_NAME}:${GACTIONS_TAG} \
+		gactions
+fi
 
 
 # Protocol Buffers
 
-docker build \
-	--build-arg PREFIX_NAME=${PREFIX_NAME} \
-	--build-arg COMMIT_NAME=${COMMIT_NAME} \
-	--build-arg DISTRO_NAME=${DISTRO_NAME} \
-	--build-arg DISTRO_VERSION=${DISTRO_VERSION} \
-	--build-arg PROTOC_VERSION=${PROTOC_VERSION} \
-	-t ${PREFIX_NAME}:build-protoc${PROTOC_VERSION}-${DISTRO_NAME}${DISTRO_VERSION} \
-	protoc
+PROTOC_TAG="build-protoc${PROTOC_VERSION}-${DISTRO_NAME}${DISTRO_VERSION}"
+if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${PROTOC_TAG}\$"; then
+	echo "Skipping ${PROTOC_TAG}"
+else
+	docker build \
+		--build-arg IMAGE_NAME=${IMAGE_NAME} \
+		--build-arg COMMIT_NAME=${COMMIT_NAME} \
+		--build-arg DISTRO_NAME=${DISTRO_NAME} \
+		--build-arg DISTRO_VERSION=${DISTRO_VERSION} \
+		--build-arg PROTOC_VERSION=${PROTOC_VERSION} \
+		-t ${IMAGE_NAME}:${PROTOC_TAG} \
+		protoc
+fi
 
 
 # Kubernetes Helm
 
-docker build \
-	--build-arg PREFIX_NAME=${PREFIX_NAME} \
-	--build-arg COMMIT_NAME=${COMMIT_NAME} \
-	--build-arg DISTRO_NAME=${DISTRO_NAME} \
-	--build-arg DISTRO_VERSION=${DISTRO_VERSION} \
-	--build-arg HELM_VERSION=${HELM_VERSION} \
-	-t ${PREFIX_NAME}:build-helm${HELM_VERSION} \
-	helm
+HELM_TAG="build-helm${HELM_VERSION}"
+if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${HELM_TAG}\$"; then
+	echo "Skipping ${HELM_TAG}"
+else
+	docker build \
+		--build-arg IMAGE_NAME=${IMAGE_NAME} \
+		--build-arg COMMIT_NAME=${COMMIT_NAME} \
+		--build-arg DISTRO_NAME=${DISTRO_NAME} \
+		--build-arg DISTRO_VERSION=${DISTRO_VERSION} \
+		--build-arg HELM_VERSION=${HELM_VERSION} \
+		-t ${IMAGE_NAME}:${HELM_TAG} \
+		helm
+fi
 
 
 # Go
 
-docker build \
-	--build-arg PREFIX_NAME=${PREFIX_NAME} \
-	--build-arg COMMIT_NAME=${COMMIT_NAME} \
-	--build-arg DISTRO_NAME=${DISTRO_NAME} \
-	--build-arg DISTRO_VERSION=${DISTRO_VERSION} \
-	--build-arg GO_VERSION=${GO_VERSION} \
-	-t ${PREFIX_NAME}:build-go${GO_VERSION} \
-	go
+GO_TAG="build-go${GO_VERSION}"
+if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${GO_TAG}\$"; then
+	echo "Skipping ${GO_TAG}"
+else
+	docker build \
+		--build-arg IMAGE_NAME=${IMAGE_NAME} \
+		--build-arg COMMIT_NAME=${COMMIT_NAME} \
+		--build-arg DISTRO_NAME=${DISTRO_NAME} \
+		--build-arg DISTRO_VERSION=${DISTRO_VERSION} \
+		--build-arg GO_VERSION=${GO_VERSION} \
+		-t ${IMAGE_NAME}:${GO_TAG} \
+		go
+fi
 
 
 # Google App Engine Go SDK
 
-docker build \
-	--build-arg PREFIX_NAME=${PREFIX_NAME} \
-	--build-arg COMMIT_NAME=${COMMIT_NAME} \
-	--build-arg DISTRO_NAME=${DISTRO_NAME} \
-	--build-arg DISTRO_VERSION=${DISTRO_VERSION} \
-	--build-arg GAESDK_VERSION=${GAESDK_VERSION} \
-	-t ${PREFIX_NAME}:build-gaesdk${GAESDK_VERSION} \
-	gaesdk
+GAESDK_TAG="build-gaesdk${GAESDK_VERSION}"
+if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${GAESDK_TAG}\$"; then
+	echo "Skipping ${GAESDK_TAG}"
+else
+	docker build \
+		--build-arg IMAGE_NAME=${IMAGE_NAME} \
+		--build-arg COMMIT_NAME=${COMMIT_NAME} \
+		--build-arg DISTRO_NAME=${DISTRO_NAME} \
+		--build-arg DISTRO_VERSION=${DISTRO_VERSION} \
+		--build-arg GAESDK_VERSION=${GAESDK_VERSION} \
+		-t ${IMAGE_NAME}:${GAESDK_TAG} \
+		gaesdk
+fi
 
 
 # The Composite Build
 
 LATEST=
-[ -z $NOT_COMMITTED ] && LATEST="-t ${PREFIX_NAME}:latest"
+[ -z $NOT_COMMITTED ] && LATEST="-t ${IMAGE_NAME}:latest"
 
 docker build \
-	--build-arg PREFIX_NAME=${PREFIX_NAME} \
+	--build-arg IMAGE_NAME=${IMAGE_NAME} \
 	--build-arg COMMIT_NAME=${COMMIT_NAME} \
 	--build-arg DISTRO_NAME=${DISTRO_NAME} \
 	--build-arg DISTRO_VERSION=${DISTRO_VERSION} \
@@ -124,20 +158,20 @@ docker build \
 	--build-arg NODE_REPOVER=${NODE_REPOVER} \
 	--build-arg MONGO_REPOVER=${MONGO_REPOVER} \
 	--build-arg MONGO_DISTRO_NAME=${MONGO_DISTRO_NAME} \
-	-t ${PREFIX_NAME}:${VERSION}-${DISTRO_NAME}${DISTRO_VERSION} ${LATEST} \
+	-t ${IMAGE_NAME}:${VERSION}-${DISTRO_NAME}${DISTRO_VERSION} ${LATEST} \
 	devenv
 
 
 # Push!
 
 if [ -z $NOT_COMMITTED ]; then
-	docker push ${PREFIX_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION}
-	docker push ${PREFIX_NAME}:build-fonts
-	docker push ${PREFIX_NAME}:build-gactions
-	docker push ${PREFIX_NAME}:build-protoc${PROTOC_VERSION}-${DISTRO_NAME}${DISTRO_VERSION}
-	docker push ${PREFIX_NAME}:build-helm${HELM_VERSION}
-	docker push ${PREFIX_NAME}:build-go${GO_VERSION}
-	docker push ${PREFIX_NAME}:build-gaesdk${GAESDK_VERSION}
-	docker push ${PREFIX_NAME}:${VERSION}-${DISTRO_NAME}${DISTRO_VERSION}
-	docker push ${PREFIX_NAME}:latest
+	docker push ${IMAGE_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION}
+	docker push ${IMAGE_NAME}:build-fonts
+	docker push ${IMAGE_NAME}:build-gactions
+	docker push ${IMAGE_NAME}:build-protoc${PROTOC_VERSION}-${DISTRO_NAME}${DISTRO_VERSION}
+	docker push ${IMAGE_NAME}:build-helm${HELM_VERSION}
+	docker push ${IMAGE_NAME}:build-go${GO_VERSION}
+	docker push ${IMAGE_NAME}:build-gaesdk${GAESDK_VERSION}
+	docker push ${IMAGE_NAME}:${VERSION}-${DISTRO_NAME}${DISTRO_VERSION}
+	docker push ${IMAGE_NAME}:latest
 fi

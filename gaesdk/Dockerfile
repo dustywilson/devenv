@@ -1,11 +1,11 @@
 ARG COMMIT_NAME=unknown
-ARG PREFIX_NAME=dustywilson/devenv
+ARG IMAGE_NAME=dustywilson/devenv
 ARG DISTRO_NAME=ubuntu
 ARG DISTRO_VERSION=latest
 ARG GAESDK_VERSION
 
 
-FROM ${PREFIX_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION} AS compiler
+FROM ${IMAGE_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION} AS compiler
 
 WORKDIR /gaesdk
 RUN gsutil cp gs://appengine-sdks/featured/go_appengine_sdk_linux_amd64-${GAESDK_VERSION}.zip | unzip
