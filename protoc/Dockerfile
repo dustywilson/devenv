@@ -1,20 +1,18 @@
+ARG COMMIT_NAME=unknown
+ARG PREFIX_NAME=dustywilson/devenv
 ARG DISTRO_NAME=ubuntu
 ARG DISTRO_VERSION=latest
 ARG PROTOC_VERSION
 
 
-FROM ${DISTRO_NAME}:${DISTRO_VERSION} AS compiler
+FROM ${PREFIX_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION} AS compiler
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
 	autoconf \
 	automake \
-	ca-certificates \
-	curl \
 	g++ \
-	git \
 	libtool \
-	make \
-	unzip && \
+	make && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
 
@@ -32,12 +30,14 @@ RUN ldconfig
 
 FROM scratch
 
+ARG COMMIT_NAME
 ARG DISTRO_NAME
 ARG DISTRO_VERSION
 ARG PROTOC_VERSION
 
 LABEL maintainer="Dusty Wilson <dusty@linux.com>" \
       description="This image is not directly usable, but is intended as a source for other images.  It contains the compiled binary and libraries for protoc ${PROTOC_VERSION}." \
+      commit.name="${COMMIT_NAME}" \
       protoc.version="${PROTOC_VERSION}" \
       builddistro.name="${DISTRO_NAME}" \
       builddistro.version="${DISTRO_VERSION}"
