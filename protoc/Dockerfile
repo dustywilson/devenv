@@ -3,7 +3,7 @@ ARG DISTRO_VERSION=latest
 ARG PROTOC_VERSION
 
 
-FROM ${DISTRO_NAME}:${DISTRO_VERSION} as compiler
+FROM ${DISTRO_NAME}:${DISTRO_VERSION} AS compiler
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
 	autoconf \
