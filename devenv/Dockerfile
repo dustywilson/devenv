@@ -22,23 +22,22 @@ FROM ${IMAGE_NAME}:build-gaesdk${GAESDK_VERSION} AS gaesdk
 
 
 FROM ${IMAGE_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION}
-
 ARG DISTRO_NAME
-ARG NODE_REPOVER
-ARG MONGO_REPOVER
-ARG MONGO_DISTRO_NAME
-ARG MONGO_SIGNING_KEY
 
 # User Setup
 RUN useradd -d /user -m user
 WORKDIR /user
 
 # Node.js Repo & Keys
+ARG NODE_REPOVER
 RUN curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
 	echo "deb https://deb.nodesource.com/node_${NODE_REPOVER} $(lsb_release -c -s) main" > /etc/apt/sources.list.d/nodesource.list && \
 	echo "deb-src https://deb.nodesource.com/node_${NODE_REPOVER} $(lsb_release -c -s) main" >> /etc/apt/sources.list.d/nodesource.list
 
 # MongoDB Repo & Keys
+ARG MONGO_REPOVER
+ARG MONGO_DISTRO_NAME
+ARG MONGO_SIGNING_KEY
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv ${MONGO_SIGNING_KEY} && \
 	echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/${DISTRO_NAME} ${MONGO_DISTRO_NAME}/mongodb-org/${MONGO_REPOVER} multiverse" > /etc/apt/sources.list.d/mongodb-org-${MONGO_REPOVER}.list
 
@@ -82,28 +81,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
 
-ARG COMMIT_NAME
-ARG DISTRO_NAME
-ARG DISTRO_VERSION
-ARG PROTOC_VERSION
-ARG HELM_VERSION
-ARG GO_VERSION
-ARG ATOM_VERSION
-ARG GAESDK_VERSION
-
-LABEL maintainer="Dusty Wilson <dusty@linux.com>" \
-      description="Pure development bliss." \
-      commit.name="${COMMIT_NAME}" \
-      protoc.version="${PROTOC_VERSION}" \
-      helm.version="${HELM_VERSION}" \
-      go.version="${GO_VERSION}" \
-      atom.version="${ATOM_VERSION}" \
-      gaesdk.version="${GAESDK_VERSION}" \
-      node.repover="${NODE_REPOVER}" \
-      mongo.repover="${MONGO_REPOVER}" \
-      builddistro.name="${DISTRO_NAME}" \
-      builddistro.version="${DISTRO_VERSION}"
-
 # A lovely collection of programming fonts
 COPY --from=fonts /fonts /usr/share/fonts
 RUN fc-cache -f
@@ -124,6 +101,7 @@ RUN mkdir -p /user/go/src
 VOLUME ["/user/go"]
 
 # Atom
+ARG ATOM_VERSION
 RUN curl -L https://github.com/atom/atom/releases/download/v${ATOM_VERSION}/atom-amd64.deb > /tmp/atom.deb && \
 	dpkg -i /tmp/atom.deb && \
 	rm /tmp/atom.deb
@@ -152,3 +130,24 @@ RUN echo "source <("kubectl" completion bash); source <("helm" completion bash)"
 # Entrypoint!
 COPY entrypoint.sh /user/entrypoint.sh
 ENTRYPOINT ["/user/entrypoint.sh"]
+
+# Labels
+ARG COMMIT_NAME
+ARG DISTRO_NAME
+ARG DISTRO_VERSION
+ARG PROTOC_VERSION
+ARG HELM_VERSION
+ARG GO_VERSION
+ARG GAESDK_VERSION
+LABEL maintainer="Dusty Wilson <dusty@linux.com>" \
+      description="Pure development bliss." \
+      commit.name="${COMMIT_NAME}" \
+      protoc.version="${PROTOC_VERSION}" \
+      helm.version="${HELM_VERSION}" \
+      go.version="${GO_VERSION}" \
+      atom.version="${ATOM_VERSION}" \
+      gaesdk.version="${GAESDK_VERSION}" \
+      node.repover="${NODE_REPOVER}" \
+      mongo.repover="${MONGO_REPOVER}" \
+      builddistro.name="${DISTRO_NAME}" \
+      builddistro.version="${DISTRO_VERSION}"
