@@ -7,7 +7,10 @@ ARG GO_VERSION
 
 FROM ${IMAGE_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION} AS compiler
 
-RUN gsutil cp gs://golang/go${GO_VERSION}.linux-amd64.tar.gz /tmp/go.tgz | tar -C /usr/local -zx
+ARG GO_VERSION
+
+RUN gsutil cp gs://golang/go${GO_VERSION}.linux-amd64.tar.gz /tmp/go.tgz
+RUN tar -C /usr/local -zxf /tmp/go.tgz
 
 
 FROM scratch

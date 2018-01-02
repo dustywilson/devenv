@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 	apt-transport-https \
 	ca-certificates \
 	curl \
+	dirmngr \
 	fakeroot \
 	git \
 	lsb-release \

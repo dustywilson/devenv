@@ -10,11 +10,12 @@ ARG GAESDK_VERSION
 ARG NODE_REPOVER
 ARG MONGO_REPOVER
 ARG MONGO_DISTRO_NAME
+ARG MONGO_SIGNING_KEY
 
 
 FROM ${IMAGE_NAME}:build-fonts AS fonts
 FROM ${IMAGE_NAME}:build-gactions AS gactions
-FROM ${IMAGE_NAME}:build-protoc${PROTOC_VERSION} AS protoc
+FROM ${IMAGE_NAME}:build-protoc${PROTOC_VERSION}-${DISTRO_NAME}${DISTRO_VERSION} AS protoc
 FROM ${IMAGE_NAME}:build-helm${HELM_VERSION} AS helm
 FROM ${IMAGE_NAME}:build-go${GO_VERSION} AS go
 FROM ${IMAGE_NAME}:build-gaesdk${GAESDK_VERSION} AS gaesdk
@@ -22,9 +23,11 @@ FROM ${IMAGE_NAME}:build-gaesdk${GAESDK_VERSION} AS gaesdk
 
 FROM ${IMAGE_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION}
 
+ARG DISTRO_NAME
 ARG NODE_REPOVER
 ARG MONGO_REPOVER
 ARG MONGO_DISTRO_NAME
+ARG MONGO_SIGNING_KEY
 
 # User Setup
 RUN useradd -d /user -m user
@@ -33,11 +36,15 @@ WORKDIR /user
 # Node.js Repo & Keys
 RUN curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
 	echo "deb https://deb.nodesource.com/node_${NODE_REPOVER} $(lsb_release -c -s) main" > /etc/apt/sources.list.d/nodesource.list && \
-	echo "deb-src https://deb.nodesource.com/node_${NODE_REPOVER} $(lsb_release -c -s) main" >> /etc/apt/sources.list.d/nodesource.list && \
+	echo "deb-src https://deb.nodesource.com/node_${NODE_REPOVER} $(lsb_release -c -s) main" >> /etc/apt/sources.list.d/nodesource.list
 
 # MongoDB Repo & Keys
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6 && \
-	echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt ${MONGO_DISTRO_NAME}/mongodb-org/${MONGO_REPOVER} multiverse" | tee /etc/apt/sources.list.d/mongodb-org-${MONGO_REPOVER}.list
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv ${MONGO_SIGNING_KEY} && \
+	echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/${DISTRO_NAME} ${MONGO_DISTRO_NAME}/mongodb-org/${MONGO_REPOVER} multiverse" > /etc/apt/sources.list.d/mongodb-org-${MONGO_REPOVER}.list
+
+# Yarn Repo & Keys
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+	echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list
 
 # Needed packages
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -67,10 +74,11 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 	nano \
 	nodejs \
 	python \
-	ssh \
+	ssh-client \
 	telnet \
 	vim \
-	xdg-utils && \
+	xdg-utils \
+	yarn && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
 
@@ -80,6 +88,7 @@ ARG DISTRO_VERSION
 ARG PROTOC_VERSION
 ARG HELM_VERSION
 ARG GO_VERSION
+ARG ATOM_VERSION
 ARG GAESDK_VERSION
 
 LABEL maintainer="Dusty Wilson <dusty@linux.com>" \
@@ -106,7 +115,7 @@ COPY --from=gactions /usr/bin /usr/bin
 COPY --from=protoc /usr /usr
 
 # Kubernetes Helm
-COPY --from=helm /helm /usr/bin
+COPY --from=helm /helm /usr/bin/helm
 
 # Go
 COPY --from=go /usr/local /usr/local
@@ -133,7 +142,6 @@ RUN mkdir /user/.npm-global && \
 
 # Install packages via npm
 RUN npm install --global bower
-RUN npm install --global yarn
 RUN npm install --global localtunnel
 RUN npm install --global polymer-cli
 RUN npm install --global firebase-tools
