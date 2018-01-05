@@ -30,8 +30,10 @@ if [ "$1" == "-r" ]; then
 		-p 0.0.0.0:8889:8889 \
 		dustywilson/devenv \
 		-x sleep 99999d
-elif [ "$1" == "-s" -o "$1" == "-x" -o "$1" == "-a" ]; then
+elif [ "$1" == "-s" -o "$1" == "-x" ]; then
 	docker exec -it $N ./entrypoint.sh $*
+elif [ "$1" == "-a" ]; then
+	docker exec $N ./entrypoint.sh $* &
 elif [ "$1" == "" -o "$1" == "-h" -o "$1" == "--help" ]; then
 	docker exec -it $N ./entrypoint.sh
 else
