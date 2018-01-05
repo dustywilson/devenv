@@ -13,6 +13,8 @@ if [ "$1" == "-r" ]; then
 	docker run -d \
 		--name=$N \
 		--restart=always \
+		-e DISPLAY=$DISPLAY \
+		-v /tmp/.X11-unix/:/tmp/.X11-unix/ \
 		-v "$D/go":/user/go \
 		-v "$D/atom":/user/.atom \
 		-v "$D/config":/user/.config \
