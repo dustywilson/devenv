@@ -128,6 +128,7 @@ RUN npm install --global firebase-tools
 RUN echo "source <("kubectl" completion bash); source <("helm" completion bash)" >> /user/.bashrc
 
 # Entrypoint!
+COPY example.sh /user/example.sh
 COPY entrypoint.sh /user/entrypoint.sh
 ENTRYPOINT ["/user/entrypoint.sh"]
 

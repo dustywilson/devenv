@@ -30,6 +30,9 @@ VERSION="${COMMIT_NAME}-go${GO_VERSION}-node${NODE_REPOVER}-mongo${MONGO_REPOVER
 
 BASE_TAG="base-${DISTRO_NAME}${DISTRO_VERSION}"
 if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${BASE_TAG}\$"; then
+	docker pull ${IMAGE_NAME}:${BASE_TAG}
+fi
+if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${BASE_TAG}\$"; then
 	echo "Skipping ${BASE_TAG}"
 else
 	docker build \
@@ -44,6 +47,9 @@ fi
 # Programming Fonts Collection
 
 FONTS_TAG="build-fonts"
+if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${FONTS_TAG}\$"; then
+	docker pull ${IMAGE_NAME}:${FONTS_TAG}
+fi
 if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${FONTS_TAG}\$"; then
 	echo "Skipping ${FONTS_TAG}"
 else
@@ -61,6 +67,9 @@ fi
 
 GACTIONS_TAG="build-gactions"
 if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${GACTIONS_TAG}\$"; then
+	docker pull ${IMAGE_NAME}:${GACTIONS_TAG}
+fi
+if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${GACTIONS_TAG}\$"; then
 	echo "Skipping ${GACTIONS_TAG}"
 else
 	docker build \
@@ -76,6 +85,9 @@ fi
 # Protocol Buffers
 
 PROTOC_TAG="build-protoc${PROTOC_VERSION}-${DISTRO_NAME}${DISTRO_VERSION}"
+if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${PROTOC_TAG}\$"; then
+	docker pull ${IMAGE_NAME}:${PROTOC_TAG}
+fi
 if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${PROTOC_TAG}\$"; then
 	echo "Skipping ${PROTOC_TAG}"
 else
@@ -94,6 +106,9 @@ fi
 
 HELM_TAG="build-helm${HELM_VERSION}"
 if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${HELM_TAG}\$"; then
+	docker pull ${IMAGE_NAME}:${HELM_TAG}
+fi
+if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${HELM_TAG}\$"; then
 	echo "Skipping ${HELM_TAG}"
 else
 	docker build \
@@ -111,6 +126,9 @@ fi
 
 GO_TAG="build-go${GO_VERSION}"
 if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${GO_TAG}\$"; then
+	docker pull ${IMAGE_NAME}:${GO_TAG}
+fi
+if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${GO_TAG}\$"; then
 	echo "Skipping ${GO_TAG}"
 else
 	docker build \
@@ -127,6 +145,9 @@ fi
 # Google App Engine Go SDK
 
 GAESDK_TAG="build-gaesdk${GAESDK_VERSION}"
+if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${GAESDK_TAG}\$"; then
+	docker pull ${IMAGE_NAME}:${GAESDK_TAG}
+fi
 if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${GAESDK_TAG}\$"; then
 	echo "Skipping ${GAESDK_TAG}"
 else

@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ ! -d "$HOME/.atom" ]; then
+	cat "$HOME/example.sh"
+	exit 1
+fi
+
 export USER="$(whoami)"
 
 if [ "$USER" != "root" ]; then
