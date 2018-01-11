@@ -202,7 +202,7 @@ fi
 LATEST=
 [ -z $NOT_COMMITTED ] && LATEST="-t ${IMAGE_NAME}:latest"
 
-echo ">> ${IMAGE_NAME}:${VERSION}-${DISTRO_NAME}${DISTRO_VERSION} ${LATEST}"
+echo ">> ${IMAGE_NAME}:${VERSION} ${LATEST}"
 
 docker build \
 	--build-arg IMAGE_NAME=${IMAGE_NAME} \
@@ -218,7 +218,7 @@ docker build \
 	--build-arg MONGO_REPOVER=${MONGO_REPOVER} \
 	--build-arg MONGO_DISTRO_NAME=${MONGO_DISTRO_NAME} \
 	--build-arg MONGO_SIGNING_KEY=${MONGO_SIGNING_KEY} \
-	-t ${IMAGE_NAME}:${VERSION}-${DISTRO_NAME}${DISTRO_VERSION} ${LATEST} \
+	-t ${IMAGE_NAME}:${VERSION} ${LATEST} \
 	devenv
 
 
@@ -232,6 +232,6 @@ if [ -z $NOT_COMMITTED ]; then
 	docker push ${IMAGE_NAME}:build-helm${HELM_VERSION}
 	docker push ${IMAGE_NAME}:build-go${GO_VERSION}
 	docker push ${IMAGE_NAME}:build-gaesdk${GAESDK_VERSION}
-	docker push ${IMAGE_NAME}:${VERSION}-${DISTRO_NAME}${DISTRO_VERSION}
+	docker push ${IMAGE_NAME}:${VERSION}
 	docker push ${IMAGE_NAME}:latest
 fi
