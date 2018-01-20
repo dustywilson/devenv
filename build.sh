@@ -218,7 +218,7 @@ docker build \
 	--build-arg MONGO_REPOVER=${MONGO_REPOVER} \
 	--build-arg MONGO_DISTRO_NAME=${MONGO_DISTRO_NAME} \
 	--build-arg MONGO_SIGNING_KEY=${MONGO_SIGNING_KEY} \
-	-t ${IMAGE_NAME}:${VERSION_NOUI} ${LATEST} \
+	-t ${IMAGE_NAME}:${VERSION_NOUI} ${LATEST_NOUI} \
 	devenv
 
 
