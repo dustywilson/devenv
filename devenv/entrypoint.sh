@@ -1,26 +1,28 @@
 #!/bin/bash
 
-if [ ! -d "$HOME/.atom" ]; then
-	cat "$HOME/example.sh"
-	exit 1
-fi
-
 export USER="$(whoami)"
 
-if [ "$USER" != "root" ]; then
-	for PKG in \
-		go-plus \
-		go-debug \
-		go-signature-statusbar \
-		hyperclick \
-		linter \
-		linter-ui-default \
-		intentions \
-		busy-signal \
-		language-protobuf \
-		teletype
-		do [ ! -d "$HOME/.atom/packages/$PKG" ] && apm install $PKG
-	done
+if [ ! -z "$ATOM_VERSION" ]; then
+	if [ ! -d "$HOME/.atom" ]; then
+		cat "$HOME/example.sh"
+		exit 1
+	fi
+
+	if [ "$USER" != "root" ]; then
+		for PKG in \
+			go-plus \
+			go-debug \
+			go-signature-statusbar \
+			hyperclick \
+			linter \
+			linter-ui-default \
+			intentions \
+			busy-signal \
+			language-protobuf \
+			teletype
+			do [ ! -d "$HOME/.atom/packages/$PKG" ] && apm install $PKG
+		done
+	fi
 fi
 
 [ "$TERM" == "dumb" ] && TERM=""
@@ -67,15 +69,20 @@ elif [ "$1" == "-s" ]; then
 	fi
 elif [ "$1" == "-a" ]; then
 	shift
-	if [ -e "$1" ]; then
-		# arg1 is an existing directory, open Atom with that directory
-		atom -w "$1"
-	elif [ -e "$GOPATH/src/$1" ]; then
-		# arg1 is an existing Go package, open Atom with that directory
-		atom -w "$GOPATH/src/$1"
+	if [ -z "$ATOM_VERSION" ]; then
+		echo "Atom is disabled and not included in this image.  Sorry."
+		exit 1
 	else
-		# run Atom with the go/src directory open (because we didn't find the requested dir, or there was none requested)
-		atom -w $GOPATH/src
+		if [ -e "$1" ]; then
+			# arg1 is an existing directory, open Atom with that directory
+			atom -w "$1"
+		elif [ -e "$GOPATH/src/$1" ]; then
+			# arg1 is an existing Go package, open Atom with that directory
+			atom -w "$GOPATH/src/$1"
+		else
+			# run Atom with the go/src directory open (because we didn't find the requested dir, or there was none requested)
+			atom -w $GOPATH/src
+		fi
 	fi
 else
 	# something else, give help

@@ -100,12 +100,6 @@ RUN chown -R user:user /usr/local/go/pkg
 RUN mkdir -p /user/go/src
 VOLUME ["/user/go"]
 
-# Atom
-ARG ATOM_VERSION
-RUN curl -L https://github.com/atom/atom/releases/download/v${ATOM_VERSION}/atom-amd64.deb > /tmp/atom.deb && \
-	dpkg -i /tmp/atom.deb && \
-	rm /tmp/atom.deb
-
 # Google App Engine SDK
 COPY --from=gaesdk /gaesdk /user/go_appengine
 RUN chown -R user:user /user/go_appengine
@@ -123,6 +117,21 @@ RUN npm install --global bower
 RUN npm install --global localtunnel
 RUN npm install --global polymer-cli
 RUN npm install --global firebase-tools
+
+# User Switch
+USER root
+
+# Atom
+ARG ATOM_VERSION
+ENV ATOM_VERSION=${ATOM_VERSION}
+RUN if test ! -z "${ATOM_VERSION}"; then \
+		curl -L https://github.com/atom/atom/releases/download/v${ATOM_VERSION}/atom-amd64.deb > /tmp/atom.deb && \
+		dpkg -i /tmp/atom.deb && \
+		rm /tmp/atom.deb; \
+	fi
+
+# User Switch
+USER user
 
 # Setup bash autocomplete
 RUN echo "source <("kubectl" completion bash); source <("helm" completion bash)" >> /user/.bashrc

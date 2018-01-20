@@ -7,8 +7,11 @@ ARG GAESDK_VERSION
 
 FROM ${IMAGE_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION} AS compiler
 
+ARG GAESDK_VERSION
+
 WORKDIR /gaesdk
-RUN gsutil cp gs://appengine-sdks/featured/go_appengine_sdk_linux_amd64-${GAESDK_VERSION}.zip | unzip
+RUN curl https://storage.googleapis.com/appengine-sdks/featured/go_appengine_sdk_linux_amd64-${GAESDK_VERSION}.zip -o /tmp/gaesdk.zip
+RUN unzip /tmp/gaesdk.zip
 
 
 FROM scratch
