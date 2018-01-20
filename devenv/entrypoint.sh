@@ -25,6 +25,15 @@ if [ ! -z "$ATOM_VERSION" ]; then
 	fi
 fi
 
+if [ ! -d "$HOME/go" ]; then
+	if [ -z "$ATOM_VERSION" ]; then
+		cat "$HOME/example-noui.sh"
+	else
+		cat "$HOME/example.sh"
+	fi
+	exit 1
+fi
+
 [ "$TERM" == "dumb" ] && TERM=""
 export TERM=${TERM:-linux}
 export GOROOT=/usr/local/go
