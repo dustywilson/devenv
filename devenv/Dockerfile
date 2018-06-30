@@ -61,6 +61,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install --no-instal
 	libcap2 \
 	libgconf-2-4 \
 	libgtk2.0-0 \
+	libgtk-3-0 \
 	libnotify4 \
 	libnss3 \
 	libx11-xcb1 \
