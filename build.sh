@@ -43,8 +43,8 @@ if git status --porcelain | egrep -i "^\s*[MD]" >/dev/null; then
 	COMMIT_NAME="$(date -u +"%Y%m%d%H%M-badwolf")"
 	NOT_COMMITTED=1
 fi
-VERSION_NOUI="${COMMIT_NAME}-go${GO_VERSION}-node${NODE_REPOVER}-mongo${MONGO_REPOVER}-${DISTRO_NAME}${DISTRO_VERSION}"
-VERSION_FULL="${COMMIT_NAME}-go${GO_VERSION}-node${NODE_REPOVER}-mongo${MONGO_REPOVER}-${DISTRO_NAME}${DISTRO_VERSION}-atom${ATOM_VERSION}"
+VERSION_NOUI="${COMMIT_NAME}-go${GO_VERSION}-node${NODE_REPOVER}-mongo${MONGO_REPOVER}-fonts${FONTS_BUILDDATE}-${DISTRO_NAME}${DISTRO_VERSION}"
+VERSION_FULL="${COMMIT_NAME}-go${GO_VERSION}-node${NODE_REPOVER}-mongo${MONGO_REPOVER}-fonts${FONTS_BUILDDATE}-${DISTRO_NAME}${DISTRO_VERSION}-atom${ATOM_VERSION}"
 
 
 # Base Image (includes bare essentials, such as curl and git)
