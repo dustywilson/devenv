@@ -1,16 +1,36 @@
 #!/bin/bash -e
 
 DISTRO_NAME=ubuntu
-DISTRO_VERSION=17.10
-PROTOC_VERSION=3.5.1
-HELM_VERSION=2.7.2
-GO_VERSION=1.9.2
-ATOM_VERSION=1.23.3
-GAESDK_VERSION=1.9.62
-NODE_REPOVER=9.x
-MONGO_REPOVER=3.6
+
+# https://wiki.ubuntu.com/Releases
+DISTRO_VERSION=18.04
+
+# allow pulling of prebuilt image or update to make a new one
+FONTS_BUILDDATE=20180630
+
+# https://github.com/google/protobuf/releases - use release numbers without "v" prefix
+PROTOC_VERSION=3.6.0
+
+# https://storage.googleapis.com/kubernetes-helm/ and https://github.com/kubernetes/helm/releases
+HELM_VERSION=2.9.1
+
+# https://golang.org/dl/
+GO_VERSION=1.10.3
+
+# https://atom.io/
+ATOM_VERSION=1.28.0
+
+# https://storage.googleapis.com/appengine-sdks/ (last "featured/go_appengine_sdk_linux_amd64-(.*).zip" match)
+GAESDK_VERSION=1.9.65
+
+# https://deb.nodesource.com/node_(.*)
+NODE_REPOVER=10.x
+
+# https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/ and https://repo.mongodb.org/apt/ubuntu/dists/
+# as 2018-06-30 there was no bionic (18.04) version, so we're using xenial (16.04)
+MONGO_REPOVER=4.0
 MONGO_DISTRO_NAME=xenial
-MONGO_SIGNING_KEY=2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
+MONGO_SIGNING_KEY=9DA31620334BD75D9DCB49F368818C72E52529D4
 
 
 cd "$(dirname "$(readlink -f "$0")")"
@@ -35,7 +55,7 @@ if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${BASE_TAG}\$"
 	echo "We appear to have ${BASE_TAG}..."
 else
 	echo docker pull ${IMAGE_NAME}:${BASE_TAG}
-	docker pull ${IMAGE_NAME}:${BASE_TAG}
+	docker pull ${IMAGE_NAME}:${BASE_TAG} || true
 	sleep 2s
 fi
 if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${BASE_TAG}\$"; then
@@ -52,13 +72,13 @@ fi
 
 # Programming Fonts Collection
 
-FONTS_TAG="build-fonts"
+FONTS_TAG="build-fonts-${FONTS_BUILDDATE}"
 echo ">> ${IMAGE_NAME}:${FONTS_TAG}"
 if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${FONTS_TAG}\$"; then
 	echo "We appear to have ${FONTS_TAG}..."
 else
 	echo docker pull ${IMAGE_NAME}:${FONTS_TAG}
-	docker pull ${IMAGE_NAME}:${FONTS_TAG}
+	docker pull ${IMAGE_NAME}:${FONTS_TAG} || true
 	sleep 2s
 fi
 if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${FONTS_TAG}\$"; then
@@ -82,7 +102,7 @@ if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${GACTIONS_TAG
 	echo "We appear to have ${GACTIONS_TAG}..."
 else
 	echo docker pull ${IMAGE_NAME}:${GACTIONS_TAG}
-	docker pull ${IMAGE_NAME}:${GACTIONS_TAG}
+	docker pull ${IMAGE_NAME}:${GACTIONS_TAG} || true
 	sleep 2s
 fi
 if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${GACTIONS_TAG}\$"; then
@@ -106,7 +126,7 @@ if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${PROTOC_TAG}\
 	echo "We appear to have ${PROTOC_TAG}..."
 else
 	echo docker pull ${IMAGE_NAME}:${PROTOC_TAG}
-	docker pull ${IMAGE_NAME}:${PROTOC_TAG}
+	docker pull ${IMAGE_NAME}:${PROTOC_TAG} || true
 	sleep 2s
 fi
 if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${PROTOC_TAG}\$"; then
@@ -131,7 +151,7 @@ if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${HELM_TAG}\$"
 	echo "We appear to have ${HELM_TAG}..."
 else
 	echo docker pull ${IMAGE_NAME}:${HELM_TAG}
-	docker pull ${IMAGE_NAME}:${HELM_TAG}
+	docker pull ${IMAGE_NAME}:${HELM_TAG} || true
 	sleep 2s
 fi
 if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${HELM_TAG}\$"; then
@@ -156,7 +176,7 @@ if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${GO_TAG}\$"; 
 	echo "We appear to have ${GO_TAG}..."
 else
 	echo docker pull ${IMAGE_NAME}:${GO_TAG}
-	docker pull ${IMAGE_NAME}:${GO_TAG}
+	docker pull ${IMAGE_NAME}:${GO_TAG} || true
 	sleep 2s
 fi
 if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${GO_TAG}\$"; then

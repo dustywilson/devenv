@@ -23,7 +23,7 @@ RUN git clone --depth=1 -b v${PROTOC_VERSION} https://github.com/google/protobuf
 RUN ./autogen.sh
 RUN ./configure --prefix=/build
 RUN make -j$(nproc)
-RUN make check
+#RUN make check
 RUN make install
 RUN ldconfig
 
