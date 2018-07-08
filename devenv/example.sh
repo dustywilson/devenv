@@ -21,10 +21,19 @@ echo "running  = [$R]"
 echo "existing = [$E]"
 echo
 
-if [ "$1" == "-r" ]; then
+if [ "$1" == "-destroy" ]; then
+	if [ -z "$E" ]; then
+		echo "Unable to destroy [$N] as it doesn't exist."
+		exit 1
+	fi
+	echo "Destroying [$N]..."
+	docker rm -f $N
+	exit
+elif [ "$1" == "-r" ]; then
 	mkdir -vp \
 		"$D/go" \
 		"$D/atom" \
+		"$D/vscode" \
 		"$D/config"
 
 	[ ! -z "$E" ] && docker rm -f $N
@@ -35,6 +44,7 @@ if [ "$1" == "-r" ]; then
 		-v /tmp/.X11-unix/:/tmp/.X11-unix/ \
 		-v "$D/go":/user/go \
 		-v "$D/atom":/user/.atom \
+		-v "$D/vscode":/user/.vscode \
 		-v "$D/config":/user/.config \
 		-p 0.0.0.0:$(( ${P} + 0 )):$(( ${P} + 0 )) \
 		-p 0.0.0.0:$(( ${P} + 1 )):$(( ${P} + 1 )) \
