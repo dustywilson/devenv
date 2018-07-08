@@ -6,6 +6,8 @@ ARG PROTOC_VERSION
 ARG HELM_VERSION
 ARG GO_VERSION
 ARG ATOM_VERSION
+ARG VSCODE_LINKID
+ARG VSCODE_SHA256
 ARG GAESDK_VERSION
 ARG NODE_REPOVER
 ARG MONGO_REPOVER
@@ -131,6 +133,18 @@ RUN if test ! -z "${ATOM_VERSION}"; then \
 		rm /tmp/atom.deb; \
 	fi
 
+# VS Code
+ARG VSCODE_LINKID
+ARG VSCODE_SHA256
+ENV VSCODE_LINKID=${VSCODE_LINKID}
+ENV VSCODE_SHA256=${VSCODE_SHA256:-.}
+RUN if test ! -z "${VSCODE_LINKID}"; then \
+		curl -L https://go.microsoft.com/fwlink/?LinkID=${VSCODE_LINKID} > /tmp/vscode.deb && \
+		sha256sum /tmp/vscode.deb | grep -q "${VSCODE_SHA256}" && \
+		dpkg -i /tmp/vscode.deb && \
+		rm /tmp/vscode.deb; \
+	fi
+
 # User Switch
 USER user
 
@@ -157,6 +171,7 @@ LABEL maintainer="Dusty Wilson <dusty@linux.com>" \
       helm.version="${HELM_VERSION}" \
       go.version="${GO_VERSION}" \
       atom.version="${ATOM_VERSION}" \
+      vscode.linkid="${VSCODE_LINKID}" \
       gaesdk.version="${GAESDK_VERSION}" \
       node.repover="${NODE_REPOVER}" \
       mongo.repover="${MONGO_REPOVER}" \

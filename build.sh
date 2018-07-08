@@ -20,6 +20,10 @@ GO_VERSION=1.10.3
 # https://atom.io/
 ATOM_VERSION=1.28.0
 
+# https://code.visualstudio.com/download
+VSCODE_LINKID=760868
+VSCODE_SHA256=8c359779a3c4fd4ada75d11abbd61615092d84d4b43425527df69092a0bac7a1
+
 # https://storage.googleapis.com/appengine-sdks/ (last "featured/go_appengine_sdk_linux_amd64-(.*).zip" match)
 GAESDK_VERSION=1.9.65
 
@@ -44,7 +48,13 @@ if git status --porcelain | egrep -i "^\s*[MD]" >/dev/null; then
 	NOT_COMMITTED=1
 fi
 VERSION_NOUI="${COMMIT_NAME}-go${GO_VERSION}-node${NODE_REPOVER}-mongo${MONGO_REPOVER}-fonts${FONTS_BUILDDATE}-${DISTRO_NAME}${DISTRO_VERSION}"
-VERSION_FULL="${COMMIT_NAME}-go${GO_VERSION}-node${NODE_REPOVER}-mongo${MONGO_REPOVER}-fonts${FONTS_BUILDDATE}-${DISTRO_NAME}${DISTRO_VERSION}-atom${ATOM_VERSION}"
+VERSION_FULL="${VERSION_NOUI}"
+if [ ! -z "${ATOM_VERSION}" ]; then
+	VERSION_FULL="${VERSION_FULL}-atom${ATOM_VERSION}"
+fi
+if [ ! -z "${VSCODE_LINKID}" ]; then
+	VERSION_FULL="${VERSION_FULL}-vscode${VSCODE_LINKID}"
+fi
 
 
 # Base Image (includes bare essentials, such as curl and git)
@@ -258,6 +268,8 @@ docker build \
 	--build-arg HELM_VERSION=${HELM_VERSION} \
 	--build-arg GO_VERSION=${GO_VERSION} \
 	--build-arg ATOM_VERSION=${ATOM_VERSION} \
+	--build-arg VSCODE_LINKID=${VSCODE_LINKID} \
+	--build-arg VSCODE_SHA256=${VSCODE_SHA256} \
 	--build-arg GAESDK_VERSION=${GAESDK_VERSION} \
 	--build-arg NODE_REPOVER=${NODE_REPOVER} \
 	--build-arg MONGO_REPOVER=${MONGO_REPOVER} \

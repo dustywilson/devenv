@@ -2,34 +2,13 @@
 
 export USER="$(whoami)"
 
-if [ ! -z "$ATOM_VERSION" ]; then
-	if [ ! -d "$HOME/.atom" ]; then
-		cat "$HOME/example.sh"
-		exit 1
-	fi
-
-	if [ "$USER" != "root" ]; then
-		for PKG in \
-			go-plus \
-			go-debug \
-			go-signature-statusbar \
-			hyperclick \
-			linter \
-			linter-ui-default \
-			intentions \
-			busy-signal \
-			language-protobuf \
-			teletype
-			do [ ! -d "$HOME/.atom/packages/$PKG" ] && apm install $PKG
-		done
-	fi
-fi
-
 if [ ! -d "$HOME/go" ]; then
-	if [ -z "$ATOM_VERSION" ]; then
-		cat "$HOME/example-noui.sh"
-	else
+	if [ ! -z "$ATOM_VERSION" ]; then
 		cat "$HOME/example.sh"
+	elif [ ! -z "$VSCODE_LINKID" ]; then
+		cat "$HOME/example.sh"
+	else
+		cat "$HOME/example-noui.sh"
 	fi
 	exit 1
 fi
@@ -82,6 +61,27 @@ elif [ "$1" == "-a" ]; then
 		echo "Atom is disabled and not included in this image.  Sorry."
 		exit 1
 	else
+		if [ ! -d "$HOME/.atom" ]; then
+			cat "$HOME/example.sh"
+			exit 1
+		fi
+
+		if [ "$USER" != "root" ]; then
+			for PKG in \
+				go-plus \
+				go-debug \
+				go-signature-statusbar \
+				hyperclick \
+				linter \
+				linter-ui-default \
+				intentions \
+				busy-signal \
+				language-protobuf \
+				teletype
+				do [ ! -d "$HOME/.atom/packages/$PKG" ] && apm install $PKG
+			done
+		fi
+
 		if [ -e "$1" ]; then
 			# arg1 is an existing directory, open Atom with that directory
 			atom -w "$1"
@@ -93,6 +93,23 @@ elif [ "$1" == "-a" ]; then
 			atom -w $GOPATH/src
 		fi
 	fi
+elif [ "$1" == "-v" ]; then
+	shift
+	if [ -z "$VSCODE_LINKID" ]; then
+		echo "VS Code is disabled and not included in this image.  Sorry."
+		exit 1
+	else
+		if [ -e "$1" ]; then
+			# arg1 is an existing directory, open VS Code with that directory
+			code "$1"
+		elif [ -e "$GOPATH/src/$1" ]; then
+			# arg1 is an existing Go package, open VS Code with that directory
+			code "$GOPATH/src/$1"
+		else
+			# run VS Code with the go/src directory open (because we didn't find the requested dir, or there was none requested)
+			code $GOPATH/src
+		fi
+	fi
 else
 	# something else, give help
 	echo "Usage:"
@@ -101,7 +118,14 @@ else
 	echo "  -s			to run a shell at go/src dir"
 	echo "  -s <dir-path>		to run a shell at that dir"
 	echo "  -s <go-package-name>	to run a shell at that Go package dir"
-	echo "  -a			to run Atom with go/src dir"
-	echo "  -a <file-or-dir-path>	to run Atom with that file or dir"
-	echo "  -a <go-package-name>	to run Atom with that Go package"
+	if [ ! -z "$ATOM_VERSION" ]; then
+		echo "  -a			to run Atom with go/src dir"
+		echo "  -a <file-or-dir-path>	to run Atom with that file or dir"
+		echo "  -a <go-package-name>	to run Atom with that Go package"
+	fi
+	if [ ! -z "$VSCODE_LINKID" ]; then
+		echo "  -v			to run VS Code with go/src dir"
+		echo "  -v <file-or-dir-path>	to run VS Code with that file or dir"
+		echo "  -v <go-package-name>	to run VS Code with that Go package"
+	fi
 fi
