@@ -12,7 +12,7 @@ export HAS_ATOM=$($(hash atom 2>/dev/null) && echo 1)
 export HAS_VSCODE=$($(hash code 2>/dev/null) && echo 1)
 export HAS_IDE=$(test -z "${HAS_ATOM}${HAS_VSCODE}" || echo 1)
 
-if [ ! -d "$GOPATH" ]; then
+if [ ! -d "$GOPATH" -o ! -w "$GOPATH" ]; then
 	if [ ! -z "$HAS_IDE" ]; then
 		cat "$HOME/example.sh"
 	else
