@@ -22,15 +22,15 @@ export PATH=$PATH:$GOPATH/bin:$GOROOT/bin:$APPENGINEPATH:$HOME/.npm-global/bin
 
 mkdir -p $GOPATH/src
 
-if [ "$USER" != "root" -a ! -d "$GOPATH/src/google.golang.org/grpc" ]; then
+if [ "$USER" != "root" -a -d "$GOPATH" -a ! -d "$GOPATH/src/google.golang.org/grpc" ]; then
 	go get -u google.golang.org/grpc
 fi
 
-if [ "$USER" != "root" -a ! -d "$GOPATH/src/github.com/derekparker/delve/cmd/dlv" ]; then
+if [ "$USER" != "root" -a -d "$GOPATH" -a ! -d "$GOPATH/src/github.com/derekparker/delve/cmd/dlv" ]; then
 	go get -u github.com/derekparker/delve/cmd/dlv
 fi
 
-if [ "$USER" != "root" -a ! -d "$GOPATH/src/github.com/golang/protobuf/protoc-gen-go" ]; then
+if [ "$USER" != "root" -a -d "$GOPATH" -a ! -d "$GOPATH/src/github.com/golang/protobuf/protoc-gen-go" ]; then
 	go get -u github.com/golang/protobuf/protoc-gen-go
 fi
 
