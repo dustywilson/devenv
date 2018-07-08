@@ -1,15 +1,24 @@
 #!/bin/bash
 
+ODIR=$(dirname "$(readlink -f "$0")")
+FNAM=$(basename "$0" .sh)
+[ -f "${ODIR}/${FNAM}.conf" ] && source "${ODIR}/${FNAM}.conf"
+
 I="${DEVENV_IMAGE:-latest}"
 [[ $I = *:* ]] || I="dustywilson/devenv:$I"
 N="${DEVENV_NAME:-devenv}"
-D="${DEVENV_DIR:-$(dirname "$(readlink -f "$0")")}"
+D="${DEVENV_DIR:-${ODIR}}"
 P="${DEVENV_PORT:-8880}"
+R="$(docker ps -q --filter "name=^/${N}$")"
+E="$(docker ps -aq --filter "name=^/${N}$")"
 
 echo
-echo "image   = [$I]"
-echo "name    = [$N]"
-echo "basedir = [$D]"
+echo "image    = [$I]"
+echo "name     = [$N]"
+echo "basedir  = [$D]"
+echo "baseport = [$P]"
+echo "running  = [$R]"
+echo "existing = [$E]"
 echo
 
 if [ "$1" == "-r" ]; then
@@ -18,7 +27,7 @@ if [ "$1" == "-r" ]; then
 		"$D/atom" \
 		"$D/config"
 
-	docker rm -f $N
+	[ ! -z "$E" ] && docker rm -f $N
 	docker run -d \
 		--name=$N \
 		--restart=always \
@@ -39,12 +48,20 @@ if [ "$1" == "-r" ]; then
 		-p 0.0.0.0:$(( ${P} + 9 )):$(( ${P} + 9 )) \
 		"$I" \
 		-x sleep 99999d
-elif [ "$1" == "-s" -o "$1" == "-x" ]; then
-	docker exec -it $N ./entrypoint.sh $*
-elif [ "$1" == "-a" -o "$1" == "-v" ]; then
-	docker exec $N ./entrypoint.sh $* &
-elif [ "$1" == "" -o "$1" == "-h" -o "$1" == "--help" ]; then
-	docker exec -it $N ./entrypoint.sh
+elif [ -z "$E" ]; then
+	echo "Container [$N] does not exist.  Perhaps you should run: ${0} -r"
+	exit 1
+elif [ -z "$R" ]; then
+	echo "Container [$N] exists, but is not running.  Maybe run: docker start ${N}"
+	exit 1
 else
-	docker exec -it $N ./entrypoint.sh -x $*
+	if [ "$1" == "-s" -o "$1" == "-x" ]; then
+		docker exec -it $N ./entrypoint.sh $*
+	elif [ "$1" == "-a" -o "$1" == "-v" ]; then
+		docker exec $N ./entrypoint.sh $* &
+	elif [ "$1" == "" -o "$1" == "-h" -o "$1" == "--help" ]; then
+		docker exec -it $N ./entrypoint.sh
+	else
+		docker exec -it $N ./entrypoint.sh -x $*
+	fi
 fi
