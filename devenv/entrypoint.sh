@@ -2,10 +2,18 @@
 
 export USER="$(whoami)"
 
-if [ ! -d "$HOME/go" ]; then
-	if [ ! -z "$ATOM_VERSION" ]; then
-		cat "$HOME/example.sh"
-	elif [ ! -z "$VSCODE_LINKID" ]; then
+[ "$TERM" == "dumb" ] && TERM=""
+export TERM=${TERM:-linux}
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/go
+export APPENGINEPATH=$HOME/go_appengine
+export PATH=$PATH:$GOPATH/bin:$GOROOT/bin:$APPENGINEPATH:$HOME/.npm-global/bin
+export HAS_ATOM=$($(hash atom 2>/dev/null) && echo 1)
+export HAS_VSCODE=$($(hash code 2>/dev/null) && echo 1)
+export HAS_IDE=$(test -z "${HAS_ATOM}${HAS_VSCODE}" || echo 1)
+
+if [ ! -d "$GOPATH" ]; then
+	if [ ! -z "$HAS_IDE" ]; then
 		cat "$HOME/example.sh"
 	else
 		cat "$HOME/example-noui.sh"
@@ -13,25 +21,20 @@ if [ ! -d "$HOME/go" ]; then
 	exit 1
 fi
 
-[ "$TERM" == "dumb" ] && TERM=""
-export TERM=${TERM:-linux}
-export GOROOT=/usr/local/go
-export GOPATH=$HOME/go
-export APPENGINEPATH=$HOME/go_appengine
-export PATH=$PATH:$GOPATH/bin:$GOROOT/bin:$APPENGINEPATH:$HOME/.npm-global/bin
+if [ "$USER" != "root" -a -d "$GOPATH" -a -w "$GOPATH" ]; then
+	mkdir -p $GOPATH/src
 
-mkdir -p $GOPATH/src
+	if [ ! -d "$GOPATH/src/google.golang.org/grpc" ]; then
+		go get -u google.golang.org/grpc
+	fi
 
-if [ "$USER" != "root" -a -d "$GOPATH" -a ! -d "$GOPATH/src/google.golang.org/grpc" ]; then
-	go get -u google.golang.org/grpc
-fi
+	if [ ! -d "$GOPATH/src/github.com/derekparker/delve/cmd/dlv" ]; then
+		go get -u github.com/derekparker/delve/cmd/dlv
+	fi
 
-if [ "$USER" != "root" -a -d "$GOPATH" -a ! -d "$GOPATH/src/github.com/derekparker/delve/cmd/dlv" ]; then
-	go get -u github.com/derekparker/delve/cmd/dlv
-fi
-
-if [ "$USER" != "root" -a -d "$GOPATH" -a ! -d "$GOPATH/src/github.com/golang/protobuf/protoc-gen-go" ]; then
-	go get -u github.com/golang/protobuf/protoc-gen-go
+	if [ ! -d "$GOPATH/src/github.com/golang/protobuf/protoc-gen-go" ]; then
+		go get -u github.com/golang/protobuf/protoc-gen-go
+	fi
 fi
 
 if [ "$1" == "-x" ]; then
@@ -57,7 +60,7 @@ elif [ "$1" == "-s" ]; then
 	fi
 elif [ "$1" == "-a" ]; then
 	shift
-	if [ -z "$ATOM_VERSION" ]; then
+	if [ -z "$HAS_ATOM" ]; then
 		echo "Atom is disabled and not included in this image.  Sorry."
 		exit 1
 	else
@@ -95,7 +98,7 @@ elif [ "$1" == "-a" ]; then
 	fi
 elif [ "$1" == "-v" ]; then
 	shift
-	if [ -z "$VSCODE_LINKID" ]; then
+	if [ -z "$HAS_VSCODE" ]; then
 		echo "VS Code is disabled and not included in this image.  Sorry."
 		exit 1
 	else
@@ -118,12 +121,12 @@ else
 	echo "  -s			to run a shell at go/src dir"
 	echo "  -s <dir-path>		to run a shell at that dir"
 	echo "  -s <go-package-name>	to run a shell at that Go package dir"
-	if [ ! -z "$ATOM_VERSION" ]; then
+	if [ ! -z "$HAS_ATOM" ]; then
 		echo "  -a			to run Atom with go/src dir"
 		echo "  -a <file-or-dir-path>	to run Atom with that file or dir"
 		echo "  -a <go-package-name>	to run Atom with that Go package"
 	fi
-	if [ ! -z "$VSCODE_LINKID" ]; then
+	if [ ! -z "$HAS_VSCODE" ]; then
 		echo "  -v			to run VS Code with go/src dir"
 		echo "  -v <file-or-dir-path>	to run VS Code with that file or dir"
 		echo "  -v <go-package-name>	to run VS Code with that Go package"
