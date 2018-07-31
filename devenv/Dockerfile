@@ -115,11 +115,12 @@ RUN mkdir /user/.npm-global && \
 	npm config set prefix /user/.npm-global && \
 	echo 'PATH="$PATH":/user/.npm-global/bin' >> /user/.profile
 
-# Install packages via npm
-RUN npm install --global bower
-RUN npm install --global localtunnel
-RUN npm install --global polymer-cli
-RUN npm install --global firebase-tools
+# Install packages via yarn
+RUN yarn global add bower
+RUN yarn global add localtunnel
+RUN yarn global add polymer-cli
+RUN yarn global add firebase-tools
+RUN yarn global add webpack webpack-cli
 
 # User Switch
 USER root
