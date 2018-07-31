@@ -6,7 +6,7 @@ DISTRO_NAME=ubuntu
 DISTRO_VERSION=18.04
 
 # allow pulling of prebuilt image or update to make a new one
-FONTS_BUILDDATE=20180630
+FONTS_BUILDDATE=20180730
 
 # https://github.com/google/protobuf/releases - use release numbers without "v" prefix
 PROTOC_VERSION=3.6.0
@@ -18,14 +18,14 @@ HELM_VERSION=2.9.1
 GO_VERSION=1.10.3
 
 # https://atom.io/
-ATOM_VERSION=1.28.0
+ATOM_VERSION=1.28.2
 
 # https://code.visualstudio.com/download
 VSCODE_LINKID=760868
-VSCODE_SHA256=8c359779a3c4fd4ada75d11abbd61615092d84d4b43425527df69092a0bac7a1
+VSCODE_SHA256=df7785f4b267407cbd3d58c3e4e210edbbee744fcf0bb5ae12bc4f8f4d796351
 
 # https://storage.googleapis.com/appengine-sdks/ (last "featured/go_appengine_sdk_linux_amd64-(.*).zip" match)
-GAESDK_VERSION=1.9.65
+GAESDK_VERSION=1.9.67
 
 # https://deb.nodesource.com/node_(.*)
 NODE_REPOVER=10.x
@@ -49,6 +49,7 @@ if git status --porcelain | egrep -i "^\s*[MD]" >/dev/null; then
 fi
 VERSION_NOUI="${COMMIT_NAME}-go${GO_VERSION}-node${NODE_REPOVER}-mongo${MONGO_REPOVER}-fonts${FONTS_BUILDDATE}-${DISTRO_NAME}${DISTRO_VERSION}"
 VERSION_FULL="${VERSION_NOUI}"
+[ ! -z "${IGNORE_NOT_COMMITTED}" ] && NOT_COMMITTED=
 if [ ! -z "${ATOM_VERSION}" ]; then
 	VERSION_FULL="${VERSION_FULL}-atom${ATOM_VERSION}"
 fi
@@ -290,7 +291,7 @@ if [ -z $NOT_COMMITTED ]; then
 	docker push ${IMAGE_NAME}:build-go${GO_VERSION}
 	docker push ${IMAGE_NAME}:build-gaesdk${GAESDK_VERSION}
 	docker push ${IMAGE_NAME}:${VERSION_NOUI}
-	docker push ${IMAGE_NAME}:latest-noui
+	[[ $COMMIT_NAME = *-badwolf-* ]] || docker push ${IMAGE_NAME}:latest-noui
 	docker push ${IMAGE_NAME}:${VERSION_FULL}
-	docker push ${IMAGE_NAME}:latest
+	[[ $COMMIT_NAME = *-badwolf-* ]] || docker push ${IMAGE_NAME}:latest
 fi
