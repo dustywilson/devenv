@@ -15,7 +15,7 @@ PROTOC_VERSION=3.6.0
 HELM_VERSION=2.9.1
 
 # https://golang.org/dl/
-GO_VERSION=1.10.3
+GO_VERSION=1.11beta3
 
 # https://atom.io/
 ATOM_VERSION=1.28.2
