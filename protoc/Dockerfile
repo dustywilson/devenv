@@ -1,5 +1,5 @@
 ARG COMMIT_NAME=unknown
-ARG IMAGE_NAME=dustywilson/devenv
+ARG IMAGE_NAME=emmaly/devenv
 ARG DISTRO_NAME=ubuntu
 ARG DISTRO_VERSION=latest
 ARG PROTOC_VERSION
@@ -35,7 +35,7 @@ ARG DISTRO_NAME
 ARG DISTRO_VERSION
 ARG PROTOC_VERSION
 
-LABEL maintainer="Dusty Wilson <dusty@linux.com>" \
+LABEL maintainer="Emmaly Wilson <emmaly@emma.ly>" \
       description="This image is not directly usable, but is intended as a source for other images.  It contains the compiled binary and libraries for protoc ${PROTOC_VERSION}." \
       commit.name="${COMMIT_NAME}" \
       protoc.version="${PROTOC_VERSION}" \

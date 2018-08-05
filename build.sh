@@ -40,7 +40,7 @@ MONGO_SIGNING_KEY=9DA31620334BD75D9DCB49F368818C72E52529D4
 cd "$(dirname "$(readlink -f "$0")")"
 
 
-IMAGE_NAME="dustywilson/devenv"
+IMAGE_NAME="emmaly/devenv"
 COMMIT_NAME="$(TZ=UTC git log --date=format-local:"%Y%m%d%H%m" --pretty=format:"%cd-%h" -n1)"
 NOT_COMMITTED=
 if git status --porcelain | egrep -i "^\s*[MD]" >/dev/null; then

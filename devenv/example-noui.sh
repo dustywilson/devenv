@@ -22,7 +22,7 @@ if [ "$1" == "-r" ]; then
 		-p 0.0.0.0:8887:8887 \
 		-p 0.0.0.0:8888:8888 \
 		-p 0.0.0.0:8889:8889 \
-		dustywilson/devenv:$T \
+		emmaly/devenv:$T \
 		-x sleep 99999d
 elif [ "$1" == "-s" -o "$1" == "-x" ]; then
 	docker exec -it $N ./entrypoint.sh $*

@@ -1,5 +1,5 @@
 ARG COMMIT_NAME=unknown
-ARG IMAGE_NAME=dustywilson/devenv
+ARG IMAGE_NAME=emmaly/devenv
 ARG DISTRO_NAME=ubuntu
 ARG DISTRO_VERSION=latest
 
@@ -28,7 +28,7 @@ FROM scratch
 
 ARG COMMIT_NAME
 
-LABEL maintainer="Dusty Wilson <dusty@linux.com>" \
+LABEL maintainer="Emmaly Wilson <emmaly@emma.ly>" \
       description="This image is not directly usable, but is intended as a source for other images.  It contains a lovely compilation of programmer-friendly fonts." \
       commit.name="${COMMIT_NAME}"
 

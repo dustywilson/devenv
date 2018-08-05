@@ -1,5 +1,5 @@
 ARG COMMIT_NAME=unknown
-ARG IMAGE_NAME=dustywilson/devenv
+ARG IMAGE_NAME=emmaly/devenv
 ARG DISTRO_NAME=ubuntu
 ARG DISTRO_VERSION=latest
 ARG PROTOC_VERSION
@@ -152,6 +152,12 @@ RUN if test ! -z "${VSCODE_LINKID}"; then \
 # User Switch
 USER user
 
+# yarn bin storage workaround
+RUN mkdir -p /user/.yarn && \
+	mv /user/.config/yarn/global /user/.yarn/global && \
+	ln -s ../../.yarn/global /user/.config/yarn/global && \
+	echo "mkdir -p /user/.config/yarn && [ ! -e /user/.config/yarn/global ] && ln -s ../../.yarn/global /user/.config/yarn/global" >> /user/.bashrc
+
 # Setup bash autocomplete
 RUN echo "source <("kubectl" completion bash); source <("helm" completion bash)" >> /user/.bashrc
 
@@ -168,7 +174,7 @@ ARG PROTOC_VERSION
 ARG HELM_VERSION
 ARG GO_VERSION
 ARG GAESDK_VERSION
-LABEL maintainer="Dusty Wilson <dusty@linux.com>" \
+LABEL maintainer="Emmaly Wilson <emmaly@emma.ly>" \
       description="Pure development bliss." \
       commit.name="${COMMIT_NAME}" \
       protoc.version="${PROTOC_VERSION}" \

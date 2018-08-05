@@ -5,7 +5,7 @@ FNAM=$(basename "$0" .sh)
 [ -f "${ODIR}/${FNAM}.conf" ] && source "${ODIR}/${FNAM}.conf"
 
 I="${DEVENV_IMAGE:-latest}"
-[[ $I = *:* ]] || I="dustywilson/devenv:$I"
+[[ $I = *:* ]] || I="emmaly/devenv:$I"
 N="${DEVENV_NAME:-devenv}"
 D="${DEVENV_DIR:-${ODIR}}"
 P="${DEVENV_PORT:-8880}"

@@ -30,7 +30,7 @@ ARG COMMIT_NAME
 ARG DISTRO_NAME
 ARG DISTRO_VERSION
 
-LABEL maintainer="Dusty Wilson <dusty@linux.com>" \
+LABEL maintainer="Emmaly Wilson <emmaly@emma.ly>" \
       description="This image is intended to provide ${DISTRO_NAME}:${DISTRO_VERSION} plus bare essentials, such as curl and git." \
       commit.name="${COMMIT_NAME}" \
       builddistro.name="${DISTRO_NAME}" \
