@@ -6,7 +6,7 @@ ARG PROTOC_VERSION
 ARG HELM_VERSION
 ARG GO_VERSION
 ARG ATOM_VERSION
-ARG VSCODE_LINKID
+ARG VSCODE_VERSION
 ARG VSCODE_SHA256
 ARG GAESDK_VERSION
 ARG NODE_REPOVER
@@ -138,12 +138,12 @@ RUN if test ! -z "${ATOM_VERSION}"; then \
 	fi
 
 # VS Code
-ARG VSCODE_LINKID
+ARG VSCODE_VERSION
 ARG VSCODE_SHA256
-ENV VSCODE_LINKID=${VSCODE_LINKID}
+ENV VSCODE_VERSION=${VSCODE_VERSION}
 ENV VSCODE_SHA256=${VSCODE_SHA256:-.}
-RUN if test ! -z "${VSCODE_LINKID}"; then \
-		curl -L https://go.microsoft.com/fwlink/?LinkID=${VSCODE_LINKID} > /tmp/vscode.deb && \
+RUN if test ! -z "${VSCODE_VERSION}"; then \
+		curl -L https://vscode-update.azurewebsites.net/${VSCODE_VERSION}/linux-deb-x64/stable > /tmp/vscode.deb && \
 		sha256sum /tmp/vscode.deb | grep -q "${VSCODE_SHA256}" && \
 		dpkg -i /tmp/vscode.deb && \
 		rm /tmp/vscode.deb; \
@@ -181,7 +181,7 @@ LABEL maintainer="Emmaly Wilson <emmaly@emma.ly>" \
       helm.version="${HELM_VERSION}" \
       go.version="${GO_VERSION}" \
       atom.version="${ATOM_VERSION}" \
-      vscode.linkid="${VSCODE_LINKID}" \
+      vscode.linkid="${VSCODE_VERSION}" \
       gaesdk.version="${GAESDK_VERSION}" \
       node.repover="${NODE_REPOVER}" \
       mongo.repover="${MONGO_REPOVER}" \
