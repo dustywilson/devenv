@@ -6,23 +6,25 @@ DISTRO_NAME=ubuntu
 DISTRO_VERSION=18.04
 
 # allow pulling of prebuilt image or update to make a new one
-FONTS_BUILDDATE=20180730
+FONTS_BUILDDATE=20180816
 
 # https://github.com/google/protobuf/releases - use release numbers without "v" prefix
-PROTOC_VERSION=3.6.0
+PROTOC_VERSION=3.6.1
 
-# https://storage.googleapis.com/kubernetes-helm/ and https://github.com/kubernetes/helm/releases
+# https://github.com/kubernetes/helm/releases
+# https://storage.googleapis.com/kubernetes-helm/
 HELM_VERSION=2.9.1
 
 # https://golang.org/dl/
-GO_VERSION=1.11beta3
+GO_VERSION=1.11rc1
 
 # https://atom.io/
-ATOM_VERSION=1.28.2
+ATOM_VERSION=1.29.0
 
-# https://code.visualstudio.com/download
-VSCODE_LINKID=760868
-VSCODE_SHA256=df7785f4b267407cbd3d58c3e4e210edbbee744fcf0bb5ae12bc4f8f4d796351
+# https://code.visualstudio.com/download for SHA256
+# https://code.visualstudio.com/updates/ for version number
+VSCODE_VERSION=1.26.0
+VSCODE_SHA256=59759458245b8de49d4aac5c66b09d20e353892413cbe02a57c0d8995f8c5044
 
 # https://storage.googleapis.com/appengine-sdks/ (last "featured/go_appengine_sdk_linux_amd64-(.*).zip" match)
 GAESDK_VERSION=1.9.67
@@ -30,10 +32,10 @@ GAESDK_VERSION=1.9.67
 # https://deb.nodesource.com/node_(.*)
 NODE_REPOVER=10.x
 
-# https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/ and https://repo.mongodb.org/apt/ubuntu/dists/
-# as 2018-06-30 there was no bionic (18.04) version, so we're using xenial (16.04)
+# https://repo.mongodb.org/apt/ubuntu/dists/ for distro name and version (but don't unnecessarily update version number)
+# https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/ for signing key
 MONGO_REPOVER=4.0
-MONGO_DISTRO_NAME=xenial
+MONGO_DISTRO_NAME=bionic
 MONGO_SIGNING_KEY=9DA31620334BD75D9DCB49F368818C72E52529D4
 
 
