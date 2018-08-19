@@ -55,8 +55,8 @@ VERSION_FULL="${VERSION_NOUI}"
 if [ ! -z "${ATOM_VERSION}" ]; then
 	VERSION_FULL="${VERSION_FULL}-atom${ATOM_VERSION}"
 fi
-if [ ! -z "${VSCODE_LINKID}" ]; then
-	VERSION_FULL="${VERSION_FULL}-vscode${VSCODE_LINKID}"
+if [ ! -z "${VSCODE_VERSION}" ]; then
+	VERSION_FULL="${VERSION_FULL}-vscode${VSCODE_VERSION}"
 fi
 
 
@@ -271,7 +271,7 @@ docker build \
 	--build-arg HELM_VERSION=${HELM_VERSION} \
 	--build-arg GO_VERSION=${GO_VERSION} \
 	--build-arg ATOM_VERSION=${ATOM_VERSION} \
-	--build-arg VSCODE_LINKID=${VSCODE_LINKID} \
+	--build-arg VSCODE_VERSION=${VSCODE_VERSION} \
 	--build-arg VSCODE_SHA256=${VSCODE_SHA256} \
 	--build-arg GAESDK_VERSION=${GAESDK_VERSION} \
 	--build-arg NODE_REPOVER=${NODE_REPOVER} \
