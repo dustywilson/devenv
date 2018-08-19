@@ -51,6 +51,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
 	bash-completion \
 	bzr \
+	dnsutils \
 	g++ \
 	gconf2 \
 	gconf-service \
@@ -79,6 +80,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install --no-instal
 	ssh-client \
 	telnet \
 	vim \
+	whois \
 	xdg-utils \
 	yarn && \
 	apt-get clean && \
