@@ -46,6 +46,7 @@ if [ "$1" == "-destroy" ]; then
 	exit
 elif [ "$1" == "-r" ]; then
 	mkdir -vp \
+		$HOME/.ssh \
 		"$D/go" \
 		"$D/atom" \
 		"$D/vscode" \
@@ -59,6 +60,7 @@ elif [ "$1" == "-r" ]; then
 		--ipc=host \
 		-e DISPLAY=$DISPLAY \
 		-v /tmp/.X11-unix/:/tmp/.X11-unix/ \
+		-v $HOME/.ssh:/user/.ssh \
 		-v "$D/go":/user/go \
 		-v "$D/atom":/user/.atom \
 		-v "$D/vscode":/user/.vscode \
