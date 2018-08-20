@@ -163,9 +163,9 @@ RUN mkdir -p /user/.yarn && \
 # Setup bash autocomplete
 RUN echo "source <("kubectl" completion bash); source <("helm" completion bash)" >> /user/.bashrc
 
-# Setup ssh key and custom .profile.custom
+# Setup ssh key and custom .profile
 RUN echo "ssh-add" >> /user/.bashrc
-RUN echo "[[ -f /user/.profile.custom ]] && source /user/.profile.custom" >> /user/.bashrc
+RUN echo "[[ -f /user/.config/.profile ]] && source /user/.config/.profile" >> /user/.bashrc
 
 # Entrypoint!
 COPY example.sh /user/example.sh
