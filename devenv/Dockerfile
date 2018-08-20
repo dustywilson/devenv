@@ -115,10 +115,10 @@ USER user
 # npm and yarn Configuration
 RUN mkdir /user/.npm-global && \
 	npm config set prefix /user/.npm-global && \
-	echo 'PATH="$PATH":/user/.npm-global/bin' >> /user/.profile
+	echo 'PATH="$PATH":/user/.npm-global/bin' >> /user/.bashrc
 RUN mkdir /user/.yarn && \
 	yarn config set prefix /user/.yarn && \
-	echo 'PATH="$PATH":/user/.yarn/bin' >> /user/.profile
+	echo 'PATH="$PATH":/user/.yarn/bin' >> /user/.bashrc
 
 # Install packages via yarn
 RUN yarn global add bower
