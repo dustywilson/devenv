@@ -6,25 +6,25 @@ DISTRO_NAME=ubuntu
 DISTRO_VERSION=18.04
 
 # allow pulling of prebuilt image or update to make a new one
-FONTS_BUILDDATE=20180816
+FONTS_BUILDDATE=20180824
 
 # https://github.com/google/protobuf/releases - use release numbers without "v" prefix
 PROTOC_VERSION=3.6.1
 
 # https://github.com/kubernetes/helm/releases
 # https://storage.googleapis.com/kubernetes-helm/
-HELM_VERSION=2.9.1
+HELM_VERSION=2.10.0
 
 # https://golang.org/dl/
-GO_VERSION=1.11rc1
+GO_VERSION=1.11rc2
 
 # https://atom.io/
 ATOM_VERSION=1.29.0
 
 # https://code.visualstudio.com/download for SHA256
 # https://code.visualstudio.com/updates/ for version number
-VSCODE_VERSION=1.26.0
-VSCODE_SHA256=59759458245b8de49d4aac5c66b09d20e353892413cbe02a57c0d8995f8c5044
+VSCODE_VERSION=1.26.1
+VSCODE_SHA256=18e0262f354b61d486c35d025569952da38b702325b141f7fb7ffea8ac091c7b
 
 # https://storage.googleapis.com/appengine-sdks/ (last "featured/go_appengine_sdk_linux_amd64-(.*).zip" match)
 GAESDK_VERSION=1.9.67
