@@ -164,7 +164,7 @@ RUN mkdir -p /user/.yarn && \
 RUN echo "source <("kubectl" completion bash); source <("helm" completion bash)" >> /user/.bashrc
 
 # Setup ssh key and custom .profile
-RUN echo "ssh-add" >> /user/.bashrc
+RUN echo "eval \$(ssh-agent)\nssh-add" >> /user/.bashrc
 RUN echo "[[ -f /user/.config/.profile ]] && source /user/.config/.profile" >> /user/.bashrc
 
 # Entrypoint!
