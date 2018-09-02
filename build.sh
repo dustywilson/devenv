@@ -16,10 +16,10 @@ PROTOC_VERSION=3.6.1
 HELM_VERSION=2.10.0
 
 # https://golang.org/dl/
-GO_VERSION=1.11rc2
+GO_VERSION=1.11
 
 # https://atom.io/
-ATOM_VERSION=1.29.0
+ATOM_VERSION=1.30.0
 
 # https://code.visualstudio.com/download for SHA256
 # https://code.visualstudio.com/updates/ for version number
