@@ -2,6 +2,8 @@ ARG COMMIT_NAME=unknown
 ARG IMAGE_NAME=emmaly/devenv
 ARG DISTRO_NAME=ubuntu
 ARG DISTRO_VERSION=latest
+ARG FONTS_BUILDDATE
+ARG GACTIONS_BUILDDATE
 ARG PROTOC_VERSION
 ARG HELM_VERSION
 ARG GO_VERSION
@@ -15,8 +17,8 @@ ARG MONGO_DISTRO_NAME
 ARG MONGO_SIGNING_KEY
 
 
-FROM ${IMAGE_NAME}:build-fonts AS fonts
-FROM ${IMAGE_NAME}:build-gactions AS gactions
+FROM ${IMAGE_NAME}:build-fonts-${FONTS_BUILDDATE} AS fonts
+FROM ${IMAGE_NAME}:build-gactions-${GACTIONS_BUILDDATE} AS gactions
 FROM ${IMAGE_NAME}:build-protoc${PROTOC_VERSION}-${DISTRO_NAME}${DISTRO_VERSION} AS protoc
 FROM ${IMAGE_NAME}:build-helm${HELM_VERSION} AS helm
 FROM ${IMAGE_NAME}:build-go${GO_VERSION} AS go
@@ -183,6 +185,8 @@ ARG GAESDK_VERSION
 LABEL maintainer="Emmaly Wilson <emmaly@emma.ly>" \
       description="Pure development bliss." \
       commit.name="${COMMIT_NAME}" \
+      fonts.builddate="${FONTS_BUILDDATE}" \
+      gactions.builddate="${GACTIONS_BUILDDATE}" \
       protoc.version="${PROTOC_VERSION}" \
       helm.version="${HELM_VERSION}" \
       go.version="${GO_VERSION}" \

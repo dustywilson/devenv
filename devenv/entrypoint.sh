@@ -1,6 +1,15 @@
 #!/bin/bash
 
-export USER="$(whoami)"
+export USERID="$(id -u 2>/dev/null)"
+export HOME=/user
+
+echo "---"
+echo "$(whoami)"
+echo "$USER"
+echo "$USERID"
+echo "$HOME"
+echo "$*"
+echo "---"
 
 [ "$TERM" == "dumb" ] && TERM=""
 export TERM=${TERM:-linux}
@@ -12,16 +21,18 @@ export HAS_ATOM=$($(hash atom 2>/dev/null) && echo 1)
 export HAS_VSCODE=$($(hash code 2>/dev/null) && echo 1)
 export HAS_IDE=$(test -z "${HAS_ATOM}${HAS_VSCODE}" || echo 1)
 
-if [ ! -d "$GOPATH" -o ! -w "$GOPATH" ]; then
-	if [ ! -z "$HAS_IDE" ]; then
-		cat "$HOME/example.sh"
-	else
-		cat "$HOME/example-noui.sh"
+if [ "$*" != "-x sleep 99999d" ]; then
+	if [ ! -d "$GOPATH" -o ! -w "$GOPATH" ]; then
+		if [ ! -z "$HAS_IDE" ]; then
+			cat "$HOME/example.sh"
+		else
+			cat "$HOME/example-noui.sh"
+		fi
+		exit 1
 	fi
-	exit 1
 fi
 
-if [ "$USER" != "root" -a -d "$GOPATH" -a -w "$GOPATH" ]; then
+if [ "$USERID" != "0" -a -d "$GOPATH" -a -w "$GOPATH" ]; then
 	mkdir -p $GOPATH/src
 
 	if [ ! -d "$GOPATH/src/google.golang.org/grpc" ]; then
@@ -69,7 +80,7 @@ elif [ "$1" == "-a" ]; then
 			exit 1
 		fi
 
-		if [ "$USER" != "root" ]; then
+		if [ "$USERID" != "0" ]; then
 			for PKG in \
 				go-plus \
 				go-debug \

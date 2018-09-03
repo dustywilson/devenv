@@ -7,6 +7,7 @@ DISTRO_VERSION=18.04
 
 # allow pulling of prebuilt image or update to make a new one
 FONTS_BUILDDATE=20180903
+GACTIONS_BUILDDATE=20180903
 
 # https://github.com/google/protobuf/releases - use release numbers without "v" prefix
 PROTOC_VERSION=3.6.1
@@ -109,7 +110,7 @@ fi
 
 # Actions on Google
 
-GACTIONS_TAG="build-gactions"
+GACTIONS_TAG="build-gactions-${GACTIONS_BUILDDATE}"
 echo ">> ${IMAGE_NAME}:${GACTIONS_TAG}"
 if docker images --format "{{.Tag}}" "${IMAGE_NAME}" | egrep -q "^${GACTIONS_TAG}\$"; then
 	echo "We appear to have ${GACTIONS_TAG}..."
@@ -243,6 +244,8 @@ docker build \
 	--build-arg COMMIT_NAME=${COMMIT_NAME} \
 	--build-arg DISTRO_NAME=${DISTRO_NAME} \
 	--build-arg DISTRO_VERSION=${DISTRO_VERSION} \
+	--build-arg FONTS_BUILDDATE=${FONTS_BUILDDATE} \
+	--build-arg GACTIONS_BUILDDATE=${GACTIONS_BUILDDATE} \
 	--build-arg PROTOC_VERSION=${PROTOC_VERSION} \
 	--build-arg HELM_VERSION=${HELM_VERSION} \
 	--build-arg GO_VERSION=${GO_VERSION} \
@@ -267,6 +270,8 @@ docker build \
 	--build-arg COMMIT_NAME=${COMMIT_NAME} \
 	--build-arg DISTRO_NAME=${DISTRO_NAME} \
 	--build-arg DISTRO_VERSION=${DISTRO_VERSION} \
+	--build-arg FONTS_BUILDDATE=${FONTS_BUILDDATE} \
+	--build-arg GACTIONS_BUILDDATE=${GACTIONS_BUILDDATE} \
 	--build-arg PROTOC_VERSION=${PROTOC_VERSION} \
 	--build-arg HELM_VERSION=${HELM_VERSION} \
 	--build-arg GO_VERSION=${GO_VERSION} \
@@ -286,8 +291,8 @@ docker build \
 
 if [ -z $NOT_COMMITTED ]; then
 	docker push ${IMAGE_NAME}:base-${DISTRO_NAME}${DISTRO_VERSION}
-	docker push ${IMAGE_NAME}:build-fonts
-	docker push ${IMAGE_NAME}:build-gactions
+	docker push ${IMAGE_NAME}:build-fonts-${FONTS_BUILDDATE}
+	docker push ${IMAGE_NAME}:build-gactions-${GACTIONS_BUILDDATE}
 	docker push ${IMAGE_NAME}:build-protoc${PROTOC_VERSION}-${DISTRO_NAME}${DISTRO_VERSION}
 	docker push ${IMAGE_NAME}:build-helm${HELM_VERSION}
 	docker push ${IMAGE_NAME}:build-go${GO_VERSION}
