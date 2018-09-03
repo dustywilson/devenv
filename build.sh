@@ -6,7 +6,7 @@ DISTRO_NAME=ubuntu
 DISTRO_VERSION=18.04
 
 # allow pulling of prebuilt image or update to make a new one
-FONTS_BUILDDATE=20180824
+FONTS_BUILDDATE=20180903
 
 # https://github.com/google/protobuf/releases - use release numbers without "v" prefix
 PROTOC_VERSION=3.6.1
