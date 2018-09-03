@@ -11,7 +11,7 @@ D="${DEVENV_DIR:-${ODIR}}"
 P="${DEVENV_PORT:-8880}"
 R="$(docker ps -q --filter "name=^/${N}$")"
 E="$(docker ps -aq --filter "name=^/${N}$")"
-U=""
+U="$(id -u):$(id -g)"
 
 #if [[ $1 = -u* ]]; then
 #	U=${1/#-u/}
@@ -31,10 +31,10 @@ echo "basedir  = [$D]"
 echo "baseport = [$P]"
 echo "running  = [$R]"
 echo "existing = [$E]"
-#[ ! -z "$U" ] && echo "user     = [$U]"
+[ ! -z "$U" ] && echo "user     = [$U]"
 echo
 
-#[ ! -z "$U" ] && U="-u $U"
+[ ! -z "$U" ] && U="-u $U"
 
 if [ "$1" == "-destroy" ]; then
 	if [ -z "$E" ]; then
@@ -46,7 +46,7 @@ if [ "$1" == "-destroy" ]; then
 	exit
 elif [ "$1" == "-r" ]; then
 	mkdir -vp \
-		$HOME/.ssh \
+		"$HOME/.ssh" \
 		"$D/go" \
 		"$D/atom" \
 		"$D/vscode" \
@@ -60,7 +60,9 @@ elif [ "$1" == "-r" ]; then
 		--ipc=host \
 		-e DISPLAY=$DISPLAY \
 		-v /tmp/.X11-unix/:/tmp/.X11-unix/ \
-		-v $HOME/.ssh:/user/.ssh \
+		-v /etc/passwd:/etc/passwd \
+		-v /etc/group:/etc/group \
+		-v "$HOME/.ssh":/user/.ssh \
 		-v "$D/go":/user/go \
 		-v "$D/atom":/user/.atom \
 		-v "$D/vscode":/user/.vscode \
