@@ -78,8 +78,9 @@ elif [ "$1" == "-r" ]; then
 		-p 0.0.0.0:$(( ${P} + 7 )):$(( ${P} + 7 )) \
 		-p 0.0.0.0:$(( ${P} + 8 )):$(( ${P} + 8 )) \
 		-p 0.0.0.0:$(( ${P} + 9 )):$(( ${P} + 9 )) \
+		-u root:root \
 		"$I" \
-		-x sleep 99999d
+		-QQ $U
 elif [ -z "$E" ]; then
 	echo "Container [$N] does not exist.  Perhaps you should run: ${0} -r"
 	exit 1

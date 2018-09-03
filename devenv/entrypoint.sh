@@ -3,14 +3,6 @@
 export USERID="$(id -u 2>/dev/null)"
 export HOME=/user
 
-echo "---"
-echo "$(whoami)"
-echo "$USER"
-echo "$USERID"
-echo "$HOME"
-echo "$*"
-echo "---"
-
 [ "$TERM" == "dumb" ] && TERM=""
 export TERM=${TERM:-linux}
 export GOROOT=/usr/local/go
@@ -20,6 +12,16 @@ export PATH=$PATH:$GOPATH/bin:$GOROOT/bin:$APPENGINEPATH:$HOME/.npm-global/bin
 export HAS_ATOM=$($(hash atom 2>/dev/null) && echo 1)
 export HAS_VSCODE=$($(hash code 2>/dev/null) && echo 1)
 export HAS_IDE=$(test -z "${HAS_ATOM}${HAS_VSCODE}" || echo 1)
+
+if [ "$1" == "-QQ" ]; then
+	shift
+	if [ "$1" == "-u" ]; then
+		shift
+		#chown --from=1000:1000 -vhR $1 $HOME # this is expensive and hacky...
+	fi
+	sleep 99999d
+	exit
+fi
 
 if [ "$*" != "-x sleep 99999d" ]; then
 	if [ ! -d "$GOPATH" -o ! -w "$GOPATH" ]; then
